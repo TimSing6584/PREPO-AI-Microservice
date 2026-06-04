@@ -68,6 +68,8 @@ The app will automatically fetch all other secrets (API keys, URLs, etc.) from I
 
 To get a service token: Infisical dashboard → your project → **Access Control** → **Service Tokens** → Create.
 
+To get a project id: Infisical dashboard → your project → **Settings** → Copy Project ID.
+
 ---
 
 ## Running the App
