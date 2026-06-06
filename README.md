@@ -56,7 +56,7 @@ Then open `.env` and fill in your values. There are two ways:
 
 ### Infisical
 
-Set only these 3 vars in your `.env`:
+<!-- Set only these 3 vars in your `.env`:
 
 ```env
 INFISICAL_SERVICE_TOKEN=st.your_token_here
@@ -68,7 +68,28 @@ The app will automatically fetch all other secrets (API keys, URLs, etc.) from I
 
 To get a service token: Infisical dashboard → your project → **Access Control** → **Service Tokens** → Create.
 
-To get a project id: Infisical dashboard → your project → **Settings** → Copy Project ID.
+To get a project id: Infisical dashboard → your project → **Settings** → Copy Project ID. -->
+
+We don't need to manually put environment variables into .env file because if you already installed Infisical locally you just run
+
+```bash
+infisical login
+```
+
+then run this command to select the right project
+
+```bash
+infisical init
+```
+
+Later when the server can actually run, we can use chained command supported by Infisical like : infisical run --env=dev --path=/ uvicorn main.py .... (when we use infisical run ..., Infisical automatically injects environment variables into our code)
+
+Additionally, here is the command to write all environment variables to .env:
+
+```bash
+infisical export --env=dev --path=/ --format=dotenv --output-file=.env
+```
+
 
 ---
 
@@ -152,15 +173,9 @@ Each domain service is **unaware of the other** — `pipeline/service.py` is the
 
 1. Push your code to GitHub (`.env` is gitignored — never committed)
 2. Create a new **Web Service** on Render, connect your repo
-3. Set these env vars in Render dashboard → **Environment**:
 
-```
-INFISICAL_SERVICE_TOKEN   = st.your_token_here
-INFISICAL_PROJECT_ID      = your_project_id
-INFISICAL_ENV             = prod
-```
 
-4. Set start command:
+3. Set start command:
 
 ```bash
 uvicorn src.main:app --host 0.0.0.0 --port 8000
