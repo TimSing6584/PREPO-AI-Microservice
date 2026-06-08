@@ -6,10 +6,8 @@ from .utils import validate_audio
 
 router = APIRouter(prefix="/transcribe", tags=["speech-to-text"])
 
-
 def get_stt_service() -> SpeechToTextService:
     return SpeechToTextService(config=stt_config)
-
 
 @router.post("", response_model=TranscriptOutput)
 async def transcribe(
