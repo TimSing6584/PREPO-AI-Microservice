@@ -1,4 +1,4 @@
-# assessment/config.py
+from pydantic_settings import BaseSettings
 class AssessmentConfig(BaseSettings):
     OPENAI_API_KEY: str = ""
     OPENAI_MODEL: str = "gpt-4o-mini"
@@ -7,3 +7,5 @@ class AssessmentConfig(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         extra = "ignore"          # ← add this
+
+assessment_config = AssessmentConfig()
