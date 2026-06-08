@@ -164,7 +164,7 @@ Each domain service is **unaware of the other** — `pipeline/service.py` is the
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/transcribe` | Convert audio file to text |
-| POST | `/assess` | Assess a transcript against a model answer |
+| POST | `/assessment` | Assess a transcript against a model answer |
 | POST | `/pipeline/speech-assess` | Run full STT → assessment pipeline |
 
 ---
