@@ -12,3 +12,8 @@ python-dotenv>=1.0.0
 
 # Infisical secret management
 infisicalsdk>=0.1.0
+
+# Testing
+pytest>=9.0.0
+pytest-asyncio>=1.4.0
+httpx2>=0.28.0          # replaces httpx for starlette TestClient
