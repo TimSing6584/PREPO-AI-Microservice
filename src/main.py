@@ -15,7 +15,5 @@ app.add_middleware(
 app.add_exception_handler(AppException, app_exception_handler)
 
 app.include_router(stt_router)
-
-# assessment and pipeline routers are not yet implemented
-# app.include_router(assessment_router)
-# app.include_router(pipeline_router)
+app.include_router(assessment_router)
+app.include_router(pipeline_router)
