@@ -182,3 +182,36 @@ class TestTranscribeEndpoint:
         body = resp.json()
         assert set(body.keys()) == {"transcript"}
         assert isinstance(body["transcript"], str)
+
+    def test_endpoint_rejects_non_audio_content(self, client):
+        """Plain text with audio/wav MIME must be rejected before Deepgram."""
+        resp = client.post(
+            "/transcription",
+            files={"audio": ("fake.wav", b"not audio data", "audio/wav")},
+        )
+        assert resp.status_code == 415
+        assert "not a recognized audio format" in resp.json()["detail"]
+
+    def test_endpoint_rejects_pdf_spoofed_as_wav(self, client):
+        resp = client.post(
+            "/transcription",
+            files={"audio": ("fake.wav", b"%PDF-1.4", "audio/wav")},
+        )
+        assert resp.status_code == 415
+
+    def test_endpoint_rejects_wav_bytes_with_wrong_mime(self, client, wav_bytes):
+        """WAV content declared as audio/mpeg must be rejected."""
+        resp = client.post(
+            "/transcription",
+            files={"audio": ("audio.mp3", wav_bytes, "audio/mpeg")},
+        )
+        assert resp.status_code == 415
+        assert "does not match" in resp.json()["detail"]
+
+    def test_endpoint_rejects_unsupported_mime(self, client, wav_bytes):
+        resp = client.post(
+            "/transcription",
+            files={"audio": ("doc.pdf", wav_bytes, "application/pdf")},
+        )
+        assert resp.status_code == 415
+        assert "Unsupported audio format" in resp.json()["detail"]

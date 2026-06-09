@@ -16,7 +16,7 @@ async def transcribe(
 ):
     audio_bytes = await audio.read()
 
-    # validate MIME type and file size; returns canonical mime string
-    canonical_mime = validate_audio(audio.content_type, len(audio_bytes))
+    # validate MIME type, size, and magic bytes; returns canonical mime string
+    canonical_mime = validate_audio(audio.content_type, audio_bytes)
 
     return await service.transcribe(audio_bytes, canonical_mime)

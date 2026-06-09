@@ -90,19 +90,12 @@ class TestIntegrationTranscribe:
         assert "transcript" in body
         assert isinstance(body["transcript"], str)
 
-    def test_transcribe_mp3_mime_type(self, real_audio_bytes):
-        """
-        The service does not enforce a specific MIME type; Deepgram auto-detects.
-        Sending with audio/mpeg should still succeed.
-        """
+    def test_transcribe_rejects_mime_content_mismatch(self, real_audio_bytes):
+        """WAV bytes declared as audio/mpeg must be rejected before Deepgram."""
         client = TestClient(_make_app())
         resp = client.post(
             "/transcription",
             files={"audio": ("audio.mp3", real_audio_bytes, "audio/mpeg")},
         )
-        # Could be 200 or 502 depending on whether bytes are valid MP3.
-        # We just verify the response schema when it succeeds.
-        if resp.status_code == 200:
-            assert "transcript" in resp.json()
-        else:
-            assert resp.status_code == 502
+        assert resp.status_code == 415
+        assert "does not match" in resp.json()["detail"]

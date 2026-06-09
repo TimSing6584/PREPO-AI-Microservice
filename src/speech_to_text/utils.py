@@ -20,9 +20,38 @@ ALLOWED_MIME_TYPES: dict[str, str] = {
 MAX_FILE_SIZE_BYTES = 25 * 1024 * 1024
 
 
-def validate_audio(content_type: str | None, size_bytes: int) -> str:
+def _sniff_audio_format(data: bytes) -> str | None:
+    """Return canonical MIME type from file magic bytes, or None if unrecognized."""
+    if len(data) < 4:
+        return None
+
+    if data[:4] == b"RIFF" and len(data) >= 12 and data[8:12] == b"WAVE":
+        return "audio/wav"
+
+    if data[:4] == b"fLaC":
+        return "audio/flac"
+
+    if data[:4] == b"OggS":
+        return "audio/ogg"
+
+    if data[:4] == b"\x1a\x45\xdf\xa3":
+        return "audio/webm"
+
+    if len(data) >= 8 and data[4:8] == b"ftyp":
+        return "audio/mp4"
+
+    if data[:3] == b"ID3":
+        return "audio/mpeg"
+
+    if data[0] == 0xFF and (data[1] & 0xE0) == 0xE0:
+        return "audio/mpeg"
+
+    return None
+
+
+def validate_audio(content_type: str | None, data: bytes) -> str:
     """
-    Validate MIME type and file size.
+    Validate MIME type, file size, and magic-byte content.
     Returns the canonical MIME type string to use as Content-Type.
     Raises HTTPException (415 / 413) on failure.
     """
@@ -37,6 +66,7 @@ def validate_audio(content_type: str | None, size_bytes: int) -> str:
             ),
         )
 
+    size_bytes = len(data)
     if size_bytes > MAX_FILE_SIZE_BYTES:
         mb = size_bytes / (1024 * 1024)
         raise HTTPException(
@@ -44,4 +74,21 @@ def validate_audio(content_type: str | None, size_bytes: int) -> str:
             detail=f"File too large ({mb:.1f} MB). Maximum allowed size is 25 MB.",
         )
 
-    return ALLOWED_MIME_TYPES[normalised]
+    detected = _sniff_audio_format(data)
+    if detected is None:
+        raise HTTPException(
+            status_code=415,
+            detail="File content is not a recognized audio format.",
+        )
+
+    canonical = ALLOWED_MIME_TYPES[normalised]
+    if detected != canonical:
+        raise HTTPException(
+            status_code=415,
+            detail=(
+                f"File content ({detected}) does not match "
+                f"declared type ({canonical})."
+            ),
+        )
+
+    return canonical
