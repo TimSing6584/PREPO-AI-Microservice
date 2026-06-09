@@ -110,7 +110,7 @@ Interactive docs at `http://localhost:8000/docs`
 ```
 src/
 ├── speech_to_text/
-│   ├── router.py          # POST /transcribe
+│   ├── router.py          # POST /transcription
 │   ├── schemas.py         # AudioInput, TranscriptOutput
 │   ├── service.py         # Calls Deepgram/Whisper API
 │   ├── config.py          # DEEPGRAM_API_KEY, WHISPER_URL, etc.
@@ -161,11 +161,11 @@ Each domain service is **unaware of the other** — `pipeline/service.py` is the
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/transcribe` | Convert audio file to text |
-| POST | `/assessment` | Assess a transcript against a model answer |
-| POST | `/pipeline/speech-assess` | Run full STT → assessment pipeline |
+| Method | Endpoint                  | Description                                |
+| ------ | ------------------------- | ------------------------------------------ |
+| POST   | `/transcription`          | Convert audio file to text                 |
+| POST   | `/assessment`             | Assess a transcript against a model answer |
+| POST   | `/pipeline/speech-assess` | Run full STT → assessment pipeline         |
 
 ---
 
@@ -173,8 +173,6 @@ Each domain service is **unaware of the other** — `pipeline/service.py` is the
 
 1. Push your code to GitHub (`.env` is gitignored — never committed)
 2. Create a new **Web Service** on Render, connect your repo
-
-
 3. Set start command:
 
 ```bash
