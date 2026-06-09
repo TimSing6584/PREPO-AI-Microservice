@@ -4,9 +4,7 @@ from .schemas import TranscriptOutput
 from .exceptions import TranscriptionError
 
 # Deepgram query params used on every request.
-# See: https://developers.deepgram.com/docs/nova-quickstart
 DEEPGRAM_PARAMS = {
-    # nova-3 is the latest and most accurate model as of 2024
     "model": "nova-3",
 
     # smart_format applies punctuation, paragraphs, number formatting,
@@ -21,7 +19,7 @@ DEEPGRAM_PARAMS = {
     # start/end timestamps — pairs well with diarize
     "utterances": "false",
 
-    # language auto-detection; set to e.g. "en" to pin a language
+    # language auto-detection
     "language": "en",
 }
 

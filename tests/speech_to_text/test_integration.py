@@ -78,7 +78,7 @@ class TestIntegrationTranscribe:
         """
         client = TestClient(_make_app())
         resp = client.post(
-            "/transcribe",
+            "/transcription",
             files={"audio": ("audio.wav", real_audio_bytes, "audio/wav")},
         )
 
@@ -97,7 +97,7 @@ class TestIntegrationTranscribe:
         """
         client = TestClient(_make_app())
         resp = client.post(
-            "/transcribe",
+            "/transcription",
             files={"audio": ("audio.mp3", real_audio_bytes, "audio/mpeg")},
         )
         # Could be 200 or 502 depending on whether bytes are valid MP3.

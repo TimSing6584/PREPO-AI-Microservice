@@ -1,5 +1,5 @@
 """
-Unit tests for SpeechToTextService and the /transcribe endpoint.
+Unit tests for SpeechToTextService and the /transcription endpoint.
 
 All external HTTP calls to Deepgram are mocked with pytest-mock / unittest.mock,
 so these tests run offline without a real API key.
@@ -134,7 +134,7 @@ class TestTranscribeEndpoint:
 
     def _post_audio(self, client: TestClient, audio_bytes: bytes, filename: str = "test.wav"):
         return client.post(
-            "/transcribe",
+            "/transcription",
             files={"audio": (filename, audio_bytes, "audio/wav")},
         )
 
@@ -166,7 +166,7 @@ class TestTranscribeEndpoint:
 
     def test_endpoint_missing_file_returns_422(self, client):
         """Posting without the audio field should return 422 Unprocessable Entity."""
-        resp = client.post("/transcribe")
+        resp = client.post("/transcription")
         assert resp.status_code == 422
 
     def test_endpoint_response_schema(self, client, wav_bytes):

@@ -4,7 +4,7 @@ from .schemas import TranscriptOutput
 from .config import stt_config
 from .utils import validate_audio
 
-router = APIRouter(prefix="/transcribe", tags=["speech-to-text"])
+router = APIRouter(prefix="/transcription", tags=["speech-to-text"])
 
 def get_stt_service() -> SpeechToTextService:
     return SpeechToTextService(config=stt_config)
