@@ -7,5 +7,6 @@ class PipelineInput(BaseModel):
 
 
 class PipelineOutput(BaseModel):
+    transcript: str
     score: float
     feedback: str

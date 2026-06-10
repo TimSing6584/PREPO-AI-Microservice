@@ -30,6 +30,7 @@ class PipelineService:
             raise PipelineError(exc.detail) from exc
 
         return PipelineOutput(
+            transcript=transcript_result.transcript,
             score=assessment_result.score,
             feedback=assessment_result.feedback,
         )

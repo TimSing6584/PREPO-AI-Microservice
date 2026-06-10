@@ -35,7 +35,11 @@ class TestPipelineService:
 
         result = await service.run(b"audio-bytes", "audio/wav", meta)
 
-        assert result == PipelineOutput(score=87.5, feedback="good answer")
+        assert result == PipelineOutput(
+            transcript="hello world",
+            score=87.5,
+            feedback="good answer",
+        )
         stt.transcribe.assert_awaited_once_with(b"audio-bytes", "audio/wav")
         assessment.assess.assert_awaited_once_with(
             AssessmentInput(
@@ -112,7 +116,11 @@ class TestPipelineEndpoint:
             )
 
         assert resp.status_code == 200
-        assert resp.json() == {"score": 91.0, "feedback": "strong answer"}
+        assert resp.json() == {
+            "transcript": "this is a transcript",
+            "score": 91.0,
+            "feedback": "strong answer",
+        }
         mock_validate.assert_called_once_with("audio/wav", wav_bytes)
         stt.transcribe.assert_awaited_once_with(wav_bytes, "audio/mpeg")
         assessment.assess.assert_awaited_once_with(
@@ -189,9 +197,10 @@ class TestPipelineEndpoint:
                 wav_bytes,
                 statement="What is Python?",
                 model_answer="A programming language.",
-        )
+            )
 
         body = resp.json()
-        assert set(body.keys()) == {"score", "feedback"}
+        assert set(body.keys()) == {"transcript", "score", "feedback"}
+        assert isinstance(body["transcript"], str)
         assert isinstance(body["score"], (int, float))
         assert isinstance(body["feedback"], str)

@@ -76,7 +76,9 @@ class TestPipelineIntegration:
 
         assert resp.status_code == 200, f"Unexpected status: {resp.status_code} — {resp.text}"
         body = resp.json()
+        assert "transcript" in body
         assert "score" in body
         assert "feedback" in body
+        assert isinstance(body["transcript"], str)
         assert 0 <= body["score"] <= 100
         assert isinstance(body["feedback"], str)
