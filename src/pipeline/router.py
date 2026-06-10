@@ -1,10 +1,12 @@
-from fastapi import APIRouter, UploadFile, File, Depends, Form
-from .service import PipelineService
-from .schemas import PipelineOutput
-from ..speech_to_text.service import SpeechToTextService
-from ..speech_to_text.config import stt_config
-from ..assessment.service import AssessmentService
+from fastapi import APIRouter, Depends, File, Form, UploadFile
+
 from ..assessment.config import assessment_config
+from ..assessment.service import AssessmentService
+from ..speech_to_text.config import stt_config
+from ..speech_to_text.service import SpeechToTextService
+from ..speech_to_text.utils import validate_audio
+from .schemas import PipelineInput, PipelineOutput
+from .service import PipelineService
 
 router = APIRouter(prefix="/pipeline", tags=["pipeline"])
 
@@ -22,8 +24,10 @@ async def speech_assess(
     service: PipelineService = Depends(get_pipeline_service),
 ):
     audio_bytes = await audio.read()
-    from .schemas import PipelineInput
-    return await service.run(audio_bytes, audio.content_type, PipelineInput(
-        statement=statement,
-        model_answer=model_answer,
-    ))
+    canonical_mime = validate_audio(audio.content_type, audio_bytes)
+
+    return await service.run(
+        audio_bytes,
+        canonical_mime,
+        PipelineInput(statement=statement, model_answer=model_answer),
+    )
