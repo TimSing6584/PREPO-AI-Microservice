@@ -15,6 +15,13 @@ class PipelineService:
     async def run(self, audio_bytes: bytes, mime_type: str, meta: PipelineInput) -> PipelineOutput:
         try:
             transcript_result = await self.stt.transcribe(audio_bytes, mime_type)
+            if len(transcript_result.transcript) == 0:
+                return PipelineOutput(
+                    transcript="No speech detected in the audio.",
+                    score=0.0,
+                    feedback="No speech detected in the audio.",
+                )
+            
         except TranscriptionError as exc:
             raise PipelineError(exc.detail) from exc
 
