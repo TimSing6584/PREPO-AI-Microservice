@@ -3,13 +3,14 @@ from .service import SpeechToTextService
 from .schemas import TranscriptOutput
 from .config import stt_config
 from .utils import validate_audio
+from ..security import verify_jwt
 
 router = APIRouter(prefix="/transcription", tags=["speech-to-text"])
 
 def get_stt_service() -> SpeechToTextService:
     return SpeechToTextService(config=stt_config)
 
-@router.post("", response_model=TranscriptOutput)
+@router.post("", response_model=TranscriptOutput, dependencies=[Depends(verify_jwt)])
 async def transcribe(
     audio: UploadFile = File(...),
     service: SpeechToTextService = Depends(get_stt_service),
