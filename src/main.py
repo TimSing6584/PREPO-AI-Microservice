@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .exceptions import AppException, app_exception_handler
@@ -5,6 +6,7 @@ from .speech_to_text.router import router as stt_router
 from .assessment.router import router as assessment_router
 from .pipeline.router import router as pipeline_router
 
+load_dotenv()  # Load environment variables from .env file
 app = FastAPI(title="Speech Assessment Microservice")
 
 app.add_middleware(
