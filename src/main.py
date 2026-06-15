@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .exceptions import AppException, app_exception_handler
@@ -7,7 +8,6 @@ from .assessment.router import router as assessment_router
 from .pipeline.router import router as pipeline_router
 import logging
 
-load_dotenv()  # Load environment variables from .env file
 
 logging.basicConfig(level=logging.INFO) # Configure logging at the INFO level
 
