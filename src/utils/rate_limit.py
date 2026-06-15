@@ -9,17 +9,17 @@ logger = logging.getLogger("rate_limit")
 rate_limiters = {
     "pipeline": Ratelimit(
         redis=redis,
-        limiter=SlidingWindow(max_requests=10, window=60),
+        limiter=SlidingWindow(max_requests=5, window=60),
         prefix="rl:stt_microservice:pipeline"
     ),
     "stt": Ratelimit(
         redis=redis,
-        limiter=SlidingWindow(max_requests=10, window=60),
+        limiter=SlidingWindow(max_requests=5, window=60),
         prefix="rl:stt_microservice:stt"
     ),
     "llm": Ratelimit(
         redis=redis,
-        limiter=SlidingWindow(max_requests=10, window=60),
+        limiter=SlidingWindow(max_requests=5, window=60),
         prefix="rl:stt_microservice:llm"
     ),
 }
