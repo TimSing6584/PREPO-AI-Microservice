@@ -5,8 +5,12 @@ from .exceptions import AppException, app_exception_handler
 from .speech_to_text.router import router as stt_router
 from .assessment.router import router as assessment_router
 from .pipeline.router import router as pipeline_router
+import logging
 
 load_dotenv()  # Load environment variables from .env file
+
+logging.basicConfig(level=logging.INFO) # Configure logging at the INFO level
+
 app = FastAPI(title="Speech Assessment Microservice")
 
 app.add_middleware(
