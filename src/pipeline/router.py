@@ -5,7 +5,8 @@ from ..assessment.service import AssessmentService
 from ..speech_to_text.config import stt_config
 from ..speech_to_text.service import SpeechToTextService
 from ..speech_to_text.utils import validate_audio
-from ..security import verify_jwt
+from ..utils.security import verify_jwt
+from ..utils.rate_limit import RateLimiter
 from .schemas import PipelineInput, PipelineOutput
 from .service import PipelineService
 
@@ -17,13 +18,14 @@ def get_pipeline_service() -> PipelineService:
         assessment=AssessmentService(config=assessment_config),
     )
 
-@router.post("/speech-assess", response_model=PipelineOutput, dependencies=[Depends(verify_jwt)])
+@router.post("/speech-assess", response_model=PipelineOutput, dependencies=[Depends(verify_jwt), Depends(RateLimiter("pipeline"))])
 async def speech_assess(
     audio: UploadFile = File(...),
     statement: str = Form(...),
     model_answer: str = Form(...),
     service: PipelineService = Depends(get_pipeline_service),
 ):
+    
     audio_bytes = await audio.read()
     canonical_mime = validate_audio(audio.content_type, audio_bytes)
 
