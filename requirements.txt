@@ -72,3 +72,6 @@ urllib3>=2.7.0
 pytest>=9.0.0
 pytest-asyncio>=1.4.0
 httpx2>=0.28.0            # replaces httpx for starlette TestClient
+
+# Sentry SDK
+sentry-sdk>=2.62.0
