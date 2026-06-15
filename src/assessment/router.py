@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from .schemas import AssessmentInput, AssessmentOutput
 from .service import AssessmentService
 from .config import assessment_config  
-from ..security import verify_jwt
+from ..utils.security import verify_jwt
 
 router = APIRouter(prefix="/assessment", tags=["assessment"])
 

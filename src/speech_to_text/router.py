@@ -3,7 +3,7 @@ from .service import SpeechToTextService
 from .schemas import TranscriptOutput
 from .config import stt_config
 from .utils import validate_audio
-from ..security import verify_jwt
+from ..utils.security import verify_jwt
 
 router = APIRouter(prefix="/transcription", tags=["speech-to-text"])
 
