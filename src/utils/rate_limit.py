@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sentry_sdk
 from fastapi import HTTPException, Request, status
 from upstash_ratelimit import Ratelimit, SlidingWindow
 
@@ -35,6 +36,10 @@ class RateLimiter:
         response = await asyncio.to_thread(self.limiter.limit, user_id)
 
         if not response.allowed:
+            sentry_sdk.capture_message(
+                f"Rate limit exceeded: user={user_id}, path={request.url.path}",
+                level="warning",
+            )
             logger.warning(
                 f"Rate limit exceeded: user={user_id} type={self.type} path={request.url.path}"
             )

@@ -3,6 +3,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     SPEECH_ASSESS_SERVICE_JWT_SECRET: str
+    SENTRY_DSN: str
 
     model_config = {
         "env_file": ".env",
