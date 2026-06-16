@@ -18,12 +18,12 @@ sentry_sdk.init(
 
 app = FastAPI(title="Speech Assessment Microservice")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # your frontend origin
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["http://localhost:3000"],  # your frontend origin
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 app.add_exception_handler(AppException, app_exception_handler)
 
