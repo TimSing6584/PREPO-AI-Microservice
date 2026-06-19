@@ -31,3 +31,20 @@ app.add_exception_handler(AppException, app_exception_handler)
 app.include_router(stt_router)
 app.include_router(assessment_router)
 app.include_router(pipeline_router)
+
+
+from fastapi import Depends
+from .utils.security import verify_jwt
+
+
+@app.get("/health", tags=["health"], dependencies=[Depends(verify_jwt)])
+async def health() -> dict:
+    """Authenticated warm-up/health probe.
+
+    The Next.js frontend pings this (with a service JWT) when a user shows
+    intent to record, so this serverless instance spins up on Render before
+    audio is submitted. JWT-protected like every other route so it can't be
+    abused anonymously to keep the box warm; does no work otherwise — it only
+    needs to land a request that wakes the instance.
+    """
+    return {"status": "ok"}
